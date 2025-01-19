@@ -1,85 +1,38 @@
 return {
-    'hrsh7th/nvim-cmp',
-    event = 'InsertEnter',
-    dependencies = {
-        -- Snippet Engine & its associated nvim-cmp source
-        {
-            'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-path',
-            "hrsh7th/cmp-nvim-lsp-signature-help",
-            'saadparwaiz1/cmp_luasnip',
-            'L3MON4D3/LuaSnip',
-            build = 'make install_jsregexp',
-            dependencies = {
-                {
-                    'rafamadriz/friendly-snippets',
-                    config = function()
-                        require('luasnip.loaders.from_vscode').lazy_load()
-                    end,
-                },
-            },
+    'saghen/blink.cmp',
+    dependencies = 'rafamadriz/friendly-snippets',
+    version = 'v0.10.0',
+
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+        -- 'default' for mappings similar to built-in completion
+        -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+        -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+        -- See the full "keymap" documentation for information on defining your own keymap.
+        keymap = {
+            preset = 'super-tab',
+
+            ['<C-j>'] = { 'select_next', 'fallback' },
+            ['<C-k>'] = { 'select_prev', 'fallback' },
         },
+
+        appearance = {
+            -- Sets the fallback highlight groups to nvim-cmp's highlight groups
+            -- Useful for when your theme doesn't support blink.cmp
+            -- Will be removed in a future release
+            use_nvim_cmp_as_default = true,
+            -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+            -- Adjusts spacing to ensure icons are aligned
+            nerd_font_variant = 'mono'
+        },
+
+        -- Default list of enabled providers defined so that you can extend it
+        -- elsewhere in your config, without redefining it, due to `opts_extend`
+        sources = {
+            default = { 'lsp', 'path', 'snippets', 'buffer' },
+        },
+        signature = { enabled = true },
     },
-    config = function()
-        -- See `:help cmp`
-        local cmp = require 'cmp'
-        local luasnip = require 'luasnip'
-        luasnip.config.setup {}
-
-        cmp.setup {
-            snippet = {
-                expand = function(args)
-                    luasnip.lsp_expand(args.body)
-                end,
-            },
-            completion = { completeopt = 'menu,menuone,noinsert' },
-            preselect = cmp.PreselectMode.None,
-
-            mapping = cmp.mapping.preset.insert {
-                ['<C-j>'] = cmp.mapping.select_next_item(),
-                ['<C-k>'] = cmp.mapping.select_prev_item(),
-
-                -- Scroll the documentation window [b]ack / [f]orward
-                ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-                ['<C-f>'] = cmp.mapping.scroll_docs(4),
-
-                -- Accept ([y]es) the completion.
-                --  This will auto-import if your LSP supports it.
-                --  This will expand snippets if the LSP sent a snippet.
-                ['<Tab>'] = cmp.mapping.confirm {
-                    behavior = cmp.ConfirmBehavior.Replace,
-                    select = true
-                },
-
-                -- manually trigger a completion from nvim-cmp.
-                ['<C-Space>'] = cmp.mapping.complete {},
-
-                -- Think of <c-l> as moving to the right of your snippet expansion.
-                --  So if you have a snippet that's like:
-                --  function $name($args)
-                --    $body
-                --  end
-                --
-                -- <c-l> will move you to the right of each of the expansion locations.
-                -- <c-h> is similar, except moving you backwards.
-                ['<C-l>'] = cmp.mapping(function()
-                    if luasnip.expand_or_locally_jumpable() then
-                        luasnip.expand_or_jump()
-                    end
-                end, { 'i', 's' }),
-                ['<C-h>'] = cmp.mapping(function()
-                    if luasnip.locally_jumpable(-1) then
-                        luasnip.jump(-1)
-                    end
-                end, { 'i', 's' }),
-            },
-            sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
-                { name = 'buffer' },
-                { name = 'nvim_lsp_signature_help' },
-                { name = 'luasnip' },
-                { name = 'path' },
-            }),
-        }
-    end,
+    opts_extend = { "sources.default" }
 }

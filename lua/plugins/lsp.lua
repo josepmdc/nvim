@@ -113,8 +113,6 @@ return {
             end,
         })
 
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
         local servers = {
             -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
             gopls = {
@@ -159,6 +157,8 @@ return {
             rust_analyzer = {},
             html = {},
             ts_ls = {},
+            tailwindcss = {},
+            jsonls = {},
             jdtls = {},
             ltex = {},
             yamlls = {},
@@ -178,17 +178,13 @@ return {
         require('mason').setup()
 
         local ensure_installed = vim.tbl_keys(servers or {})
-        vim.list_extend(ensure_installed, {})
         require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
         require('mason-lspconfig').setup {
             handlers = {
                 function(server_name)
                     local server = servers[server_name] or {}
-                    -- This handles overriding only values explicitly passed
-                    -- by the server configuration above. Useful when disabling
-                    -- certain features of an LSP (for example, turning off formatting for ts_ls)
-                    server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+                    server.capabilities = require('blink.cmp').get_lsp_capabilities(server.capabilities)
                     require('lspconfig')[server_name].setup(server)
                 end,
             },
