@@ -54,7 +54,7 @@ opt.inccommand = 'split'
 opt.cursorline = true
 
 -- minimal number of screen lines to keep above and below the cursor.
-opt.scrolloff = 10
+-- opt.scrolloff = 10
 
 wo.colorcolumn = "80"
 wo.number = true

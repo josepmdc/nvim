@@ -41,8 +41,6 @@ local plugins = {
     -- Git
     { "tpope/vim-fugitive" },
     require 'plugins.gitsigns',
-    -- Copilot
-    { "github/copilot.vim" },
     -- Zen mode
     { "folke/zen-mode.nvim" },
     -- auto-pairs

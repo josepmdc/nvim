@@ -147,7 +147,18 @@ return {
                         staticcheck = true,
                         directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules", "-.nvim" },
                         semanticTokens = true,
-                        gofumpt = true,
+                        -- gofumpt = true,
+                    },
+                },
+            },
+            lua_ls = {
+                settings = {
+                    Lua = {
+                        completion = {
+                            callSnippet = 'Replace',
+                        },
+                        -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+                        diagnostics = { disable = { 'missing-fields' } },
                     },
                 },
             },
@@ -162,17 +173,7 @@ return {
             jdtls = {},
             ltex = {},
             yamlls = {},
-            lua_ls = {
-                settings = {
-                    Lua = {
-                        completion = {
-                            callSnippet = 'Replace',
-                        },
-                        -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-                        diagnostics = { disable = { 'missing-fields' } },
-                    },
-                },
-            },
+            terraformls = {},
         }
 
         require('mason').setup()
