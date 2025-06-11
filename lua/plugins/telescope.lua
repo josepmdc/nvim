@@ -13,6 +13,7 @@ return {
         },
         { 'nvim-telescope/telescope-ui-select.nvim' },
         { 'nvim-tree/nvim-web-devicons' },
+        { 'nvim-telescope/telescope-file-browser.nvim' },
     },
     config = function()
         -- [[ Configure Telescope ]]
@@ -33,12 +34,16 @@ return {
                 file_ignore_patterns = {
                     "mocks",
                 },
-                mappings = {
-                    i = {
-                        ['<c-d>'] = require('telescope.actions').delete_buffer,
-                    },
-                    n = {
-                        ['<c-d>'] = require('telescope.actions').delete_buffer,
+            },
+            pickers = {
+                buffers = {
+                    mappings = {
+                        i = {
+                            ['<c-d>'] = require('telescope.actions').delete_buffer,
+                        },
+                        n = {
+                            ['<c-d>'] = require('telescope.actions').delete_buffer,
+                        },
                     },
                 },
             },
@@ -47,21 +52,34 @@ return {
         -- Enable Telescope extensions if they are installed
         pcall(require('telescope').load_extension, 'fzf')
         pcall(require('telescope').load_extension, 'ui-select')
+        pcall(require('telescope').load_extension, 'file_browser')
 
         local builtin = require 'telescope.builtin'
         local map = vim.keymap.set
         map('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind [H]elp' })
         map('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
         map('n', '<leader><leader>', function() builtin.find_files({ hidden = true }) end, { desc = '[F]ind [F]iles' })
-        map('n', '<leader>fb', builtin.builtin, { desc = '[F]ind [B]uiltin' })
+        map('n', '<leader>bi', builtin.builtin, { desc = '[B]uilt-[I]n' })
         map('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind current [W]ord' })
         map('n', '<leader>fs', builtin.live_grep, { desc = '[F]ind [S]tring' })
         map('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
         map('n', '<leader>fr', builtin.resume, { desc = '[F]ind [R]esume' })
         map('n', '<leader>f.', builtin.oldfiles, { desc = '[F]ind Recent Files ("." for repeat)' })
         map('n', '<leader>fo', builtin.buffers, { desc = '[F]ind [O]pen buffers' })
+        map("n", "<space>fb", function()
+            require("telescope").extensions.file_browser.file_browser()
+        end)
+        map('n', '<leader>fc', function()
+            require("telescope").extensions.file_browser.file_browser({
+                cwd = vim.fn.expand("%:p:h"),
+                select_buffer = true,
+            })
+        end, { desc = '[F]ile browser in [C]urrent file dir' })
 
-        -- Slightly advanced example of overriding default behavior and theme
+        map('n', '<leader>gb', builtin.git_branches, { desc = '[G]it [B]ranches' })
+        map('n', '<leader>gs', builtin.git_status, { desc = '[G]it [S]tatus' })
+        map('n', '<leader>gS', builtin.git_stash, { desc = '[G]it [S]tash' })
+
         map('n', '<leader>/', function()
             -- You can pass additional configuration to Telescope to change the theme, layout, etc.
             builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
