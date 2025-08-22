@@ -1,16 +1,15 @@
 return {
     'neovim/nvim-lspconfig',
     dependencies = {
-        { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
+        { 'mason-org/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
         'williamboman/mason-lspconfig.nvim',
-        'WhoIsSethDaniel/mason-tool-installer.nvim',
 
         -- Useful status updates for LSP.
-        { 'j-hui/fidget.nvim',       opts = {} },
+        { 'j-hui/fidget.nvim',    opts = {} },
 
         -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
         -- used for completion, annotations and signatures of Neovim apis
-        { 'folke/neodev.nvim',       opts = {} },
+        { 'folke/neodev.nvim',    opts = {} },
     },
     config = function()
         vim.api.nvim_create_autocmd('LspAttach', {
@@ -19,6 +18,13 @@ return {
                 local map = function(keys, func, desc)
                     vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
                 end
+
+                -- disable the default keybinds {{
+                for _, bind in ipairs({ "grn", "gra", "gri", "grr", "grt" }) do
+                    pcall(vim.keymap.del, "n", bind)
+                end
+                pcall(vim.keymap.del, "x", "gra")
+                -- }}
 
                 -- Jump to the definition of the word under your cursor.
                 --  This is where a variable was first declared, or where a function is defined, etc.
@@ -178,10 +184,10 @@ return {
 
         require('mason').setup()
 
-        local ensure_installed = vim.tbl_keys(servers or {})
-        require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
         require('mason-lspconfig').setup {
+            {
+                ensure_installed = vim.tbl_keys(servers or {}),
+            },
             handlers = {
                 function(server_name)
                     local server = servers[server_name] or {}
