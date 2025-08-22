@@ -36,6 +36,10 @@ local plugins = {
     require 'plugins.lsp',
     -- Telescope
     require 'plugins.telescope',
+    -- DB UI
+    require 'plugins.dbui',
+    -- Testing
+    -- require 'plugins.testing',
     -- LaTeX
     { "lervag/vimtex" },
     -- Git
