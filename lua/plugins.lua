@@ -1,90 +1,66 @@
--- expects the name of the config file
-local function get_config(name)
-    return function()
-        require(string.format("config.%s", name))
-    end
+--------------------------------------------------------------------------------
+-- BOOTSTRAP MINI.NVIM
+--------------------------------------------------------------------------------
+local path_package = vim.fn.stdpath('data') .. '/site/'
+local mini_path = path_package .. 'pack/deps/start/mini.nvim'
+if not vim.loop.fs_stat(mini_path) then
+    vim.cmd('echo "Installing [`mini.nvim`](../doc/mini-nvim.qmd#mini.nvim)" | redraw')
+    local clone_cmd = {
+        'git', 'clone', '--filter=blob:none',
+        'https://github.com/nvim-mini/mini.nvim', mini_path
+    }
+    vim.fn.system(clone_cmd)
+    vim.cmd('packadd mini.nvim | helptags ALL')
+    vim.cmd('echo "Installed [`mini.nvim`](../doc/mini-nvim.qmd#mini.nvim)" | redraw')
 end
 
--- bootstrap lazy.nvim if not installed
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-    local out = vim.fn.system({
-        "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-    if vim.v.shell_error ~= 0 then
-        vim.api.nvim_echo({
-            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-            { out,                            "WarningMsg" },
-            { "\nPress any key to exit..." },
-        }, true, {})
-        vim.fn.getchar()
-        os.exit(1)
-    end
-end
-vim.opt.rtp:prepend(lazypath)
+require('mini.deps').setup({ path = { package = path_package } })
 
-local plugins = {
-    -- Color Theme
-    require 'plugins.colors',
-    -- Autocomplete
-    require 'plugins.autocomplete',
-    -- Autoformat
-    require 'plugins.autoformat',
-    -- Syntax highlighting
-    require 'plugins.treesitter',
-    -- LSP
-    require 'plugins.lsp',
-    -- Telescope
-    require 'plugins.telescope',
-    -- DB UI
-    require 'plugins.dbui',
-    -- Testing
-    -- require 'plugins.testing',
-    -- LaTeX
-    { "lervag/vimtex" },
-    -- Git
-    { "tpope/vim-fugitive" },
-    require 'plugins.gitsigns',
-    -- Zen mode
-    { "folke/zen-mode.nvim" },
-    -- auto-pairs
-    require 'plugins.autopairs',
-    -- debugger
-    require 'plugins.debug',
-    -- add indentation guides
-    { 'lukas-reineke/indent-blankline.nvim', main = 'ibl' },
-    -- linting
-    require 'plugins.lint',
-    -- autopairs
-    require 'plugins.autopairs',
-    -- file tree
-    require 'plugins.neo-tree',
-    -- bufferline
-    require 'plugins.bufferline',
-    -- status bar
-    {
-        "nvim-lualine/lualine.nvim",
-        config = get_config("lualine"),
-        event = "VimEnter",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-    },
-    -- Go
-    require 'plugins.go',
-    -- LSP lines
-    {
-        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        config = function()
-            require("lsp_lines").setup()
-        end,
-    },
-    -- Pretty notifications
-    {
-        "rcarriga/nvim-notify",
-        config = function()
-            require("notify").setup()
-            vim.notify = require("notify")
-        end,
-    },
-}
+local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
-require("lazy").setup(plugins, {})
+add({
+    source = 'nvim-treesitter/nvim-treesitter',
+    hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
+})
+add({
+    source = 'neovim/nvim-lspconfig',
+    depends = {
+        'mason-org/mason.nvim',
+        'mason-org/mason-lspconfig.nvim',
+    },
+})
+add('tpope/vim-fugitive')
+add('rebelot/kanagawa.nvim')
+add('stevearc/conform.nvim')
+add({
+    source = "saghen/blink.cmp",
+    depends = { "rafamadriz/friendly-snippets" },
+    checkout = "v1.8.0",
+})
+add('https://git.sr.ht/~whynothugo/lsp_lines.nvim')
+
+now(function()
+    require('mini.basics').setup()
+    require('mini.icons').setup()
+    require('mini.statusline').setup()
+    require('mini.tabline').setup()
+    require('plugins.colors')
+    require('plugins.autoformat')
+    require('plugins.treesitter')
+    require('plugins.lsp')
+    require('plugins.picker')
+    require("lsp_lines").setup()
+end)
+
+later(function()
+    require('mini.files').setup()
+
+    require('mini.notify').setup()
+    vim.notify = require('mini.notify').make_notify()
+
+    require('mini.indentscope').setup()
+    require('mini.pairs').setup()
+    require('mini.comment').setup()
+    require('plugins.autocomplete')
+    require('mini.diff').setup()
+end)

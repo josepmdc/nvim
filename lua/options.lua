@@ -61,6 +61,8 @@ wo.number = true
 wo.relativenumber = true
 wo.wrap = false
 
+opt.foldlevel = 20
+
 -- Disable lsp_lines plugin by default
 vim.diagnostic.config({ virtual_lines = false })
 vim.diagnostic.config({ virtual_text = false })
