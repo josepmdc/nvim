@@ -37,7 +37,6 @@ add({
     depends = { "rafamadriz/friendly-snippets" },
     checkout = "v1.8.0",
 })
-add('https://git.sr.ht/~whynothugo/lsp_lines.nvim')
 
 now(function()
     require('mini.basics').setup()
@@ -49,7 +48,6 @@ now(function()
     require('plugins.treesitter')
     require('plugins.lsp')
     require('plugins.picker')
-    require("lsp_lines").setup()
 end)
 
 later(function()

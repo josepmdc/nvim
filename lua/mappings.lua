@@ -25,7 +25,7 @@ map("v", "//", "y/\\V<C-R>=escape(@\",'/\')<CR><CR>", silent)
 map("n", "<Esc>", ":noh<CR>", silent)
 
 -- save
-map("n", "<leader>w", ":up<CR>", silent)
+map("n", "<leader>w", ":w<CR>", silent)
 
 -- Diagnostic keymaps
 map('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -42,7 +42,10 @@ map({ "n", "v" }, "<leader>d", '"_d', silent)
 map("v", "<leader>p", '"_dP', silent)
 
 -- Toggle lsp_lines
-map("n", "<leader>e", require("lsp_lines").toggle, silent)
+map("n", "<leader>e", function()
+    local new_config = not vim.diagnostic.config().virtual_lines
+    vim.diagnostic.config({ virtual_lines = new_config })
+end, silent)
 
 -- ESC to exit terminal mode
 map("t", "<Esc>", "<C-\\><C-n>")
