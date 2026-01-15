@@ -1,30 +1,16 @@
-return {
-    'stevearc/conform.nvim',
-    lazy = false,
-    keys = {
-        {
-            '<leader>ff',
-            function()
-                require('conform').format { async = true, lsp_fallback = true }
-            end,
-            mode = '',
-            desc = '[F]ormat buffer',
-        },
+require('conform').setup({
+    notify_on_error = false,
+    format_on_save = function()
+        return {
+            lsp_format = "fallback",
+            timeout_ms = 500,
+        }
+    end,
+    formatters_by_ft = {
+        templ = { "templ" },
+        javascript = { "prettier" },
+        typescript = { "prettier" },
+        typescriptreact = { "prettier" },
+        javascriptreact = { "prettier" },
     },
-    opts = {
-        notify_on_error = false,
-        format_on_save = function()
-            return {
-                lsp_format = "fallback",
-                timeout_ms = 500,
-            }
-        end,
-        formatters_by_ft = {
-            templ = { "templ" },
-            javascript = { "prettier" },
-            typescript = { "prettier" },
-            typescriptreact = { "prettier" },
-            javascriptreact = { "prettier" },
-        },
-    },
-}
+})

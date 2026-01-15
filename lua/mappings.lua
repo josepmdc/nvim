@@ -52,3 +52,7 @@ map("n", "<leader>r", ":LspRestart<CR>", silent)
 
 -- close buffer
 map("n", "<leader>bd", ":bd<CR>", silent)
+
+-- iterate buffers
+map("n", "<Tab>", ":bnext<CR>", silent)
+map("n", "<S-Tab>", ":bprevious<CR>", silent)
