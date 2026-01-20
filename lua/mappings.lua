@@ -19,7 +19,10 @@ map("n", "<S-Down>", "<C-E>", silent)
 map("n", "<S-Up>", "<C-Y>", silent)
 
 -- search selected text
-map("v", "//", "y/\\V<C-R>=escape(@\",'/\')<CR><CR>", silent)
+map("v", "//", '"vy/\\V<C-r>=escape(@v, "/")<CR><CR>', silent)
+
+-- search and replace current selection
+map("v", "<C-S-l>", '"vy:%s/<C-r>v//g<Left><Left>', silent)
 
 -- clear search
 map("n", "<Esc>", ":noh<CR>", silent)
@@ -59,3 +62,6 @@ map("n", "<leader>bd", ":bd<CR>", silent)
 -- iterate buffers
 map("n", "<Tab>", ":bnext<CR>", silent)
 map("n", "<S-Tab>", ":bprevious<CR>", silent)
+
+-- toggle file tree
+map("n", "<C-b>", function() if not MiniFiles.close() then MiniFiles.open() end end, silent)
