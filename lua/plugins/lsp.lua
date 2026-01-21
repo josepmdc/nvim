@@ -53,7 +53,7 @@ local servers = {
     jsonls = {},
     jdtls = {},
     yamlls = {},
-    elixirls = {},
+    expert = {},
 }
 
 require('mason').setup()

@@ -64,4 +64,4 @@ map("n", "<Tab>", ":bnext<CR>", silent)
 map("n", "<S-Tab>", ":bprevious<CR>", silent)
 
 -- toggle file tree
-map("n", "<C-b>", function() if not MiniFiles.close() then MiniFiles.open() end end, silent)
+map("n", "<C-b>", function() if not MiniFiles.close() then MiniFiles.open(vim.api.nvim_buf_get_name(0)) end end, silent)
