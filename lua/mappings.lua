@@ -65,3 +65,5 @@ map("n", "<S-Tab>", ":bprevious<CR>", silent)
 
 -- toggle file tree
 map("n", "<C-b>", function() if not MiniFiles.close() then MiniFiles.open(vim.api.nvim_buf_get_name(0)) end end, silent)
+
+map("n", "<leader>gg", ":G<CR> :only<CR>", silent)
