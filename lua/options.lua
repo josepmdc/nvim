@@ -66,3 +66,6 @@ opt.foldlevel = 20
 -- Disable lsp_lines plugin by default
 vim.diagnostic.config({ virtual_lines = false })
 vim.diagnostic.config({ virtual_text = false })
+
+-- treat avro schema files as JSON
+vim.filetype.add({ extension = { avsc = "json" } })
