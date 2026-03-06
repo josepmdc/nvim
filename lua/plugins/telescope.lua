@@ -27,6 +27,20 @@ require('telescope').setup {
                 },
             },
         },
+        git_commits = {
+            mappings = {
+                i = {
+                    ["<CR>"] = function(prompt_bufnr)
+                        -- get the selected commit hash
+                        local entry = require("telescope.actions.state").get_selected_entry()
+                        -- close telescope
+                        require("telescope.actions").close(prompt_bufnr)
+                        -- open diffview
+                        vim.cmd('DiffviewOpen ' .. entry.value)
+                    end,
+                }
+            }
+        },
     },
 }
 
@@ -47,18 +61,11 @@ map('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
 map('n', '<leader>fr', builtin.resume, { desc = '[F]ind [R]esume' })
 map('n', '<leader>f.', builtin.oldfiles, { desc = '[F]ind Recent Files ("." for repeat)' })
 map('n', '<leader>fo', builtin.buffers, { desc = '[F]ind [O]pen buffers' })
-map("n", "<space>fb", function()
-    require("telescope").extensions.file_browser.file_browser()
-end)
-map('n', '<leader>fc', function()
-    require("telescope").extensions.file_browser.file_browser({
-        cwd = vim.fn.expand("%:p:h"),
-        select_buffer = true,
-    })
-end, { desc = '[F]ile browser in [C]urrent file dir' })
+map("n", "<leader>fb", builtin.builtin)
+map("n", "<leader>fm", builtin.marks, { desc = '[F]ind [M]arks' })
 
 map('n', '<leader>gb', builtin.git_branches, { desc = '[G]it [B]ranches' })
-map('n', '<leader>gs', builtin.git_status, { desc = '[G]it [S]tatus' })
+map('n', '<leader>gc', builtin.git_commits, { desc = '[G]it [C]ommits' })
 map('n', '<leader>gS', builtin.git_stash, { desc = '[G]it [S]tash' })
 
 map('n', '<leader>/', function()
