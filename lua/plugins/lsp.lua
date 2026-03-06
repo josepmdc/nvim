@@ -54,6 +54,7 @@ local servers = {
     jdtls = {},
     yamlls = {},
     expert = {},
+    graphql = {},
 }
 
 require('mason').setup()
@@ -95,7 +96,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
         -- Fuzzy find all the symbols in your current workspace.
         --  Similar to document symbols, except searches over your entire project.
-        map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+        -- clashes with <leader>w to save
+        -- map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
         -- Execute a code action, usually your cursor needs to be on top of an error
         -- or a suggestion from your LSP for this to activate.
