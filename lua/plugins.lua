@@ -57,6 +57,13 @@ vim.iter {
                 },
             },
         },
+    },
+    {
+        source = 'kristijanhusak/vim-dadbod-ui',
+        depends = {
+            'tpope/vim-dadbod',
+            'kristijanhusak/vim-dadbod-completion',
+        },
     }
 }:each(MiniDeps.add)
 

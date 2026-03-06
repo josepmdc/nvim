@@ -21,11 +21,17 @@ require('blink.cmp').setup({
     completion = {
         documentation = { auto_show = true, auto_show_delay_ms = 500 },
         -- Display a preview of the selected item on the current line
-        ghost_text = { enabled = true },
+        -- ghost_text = { enabled = true },
     },
 
     sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
+        per_filetype = {
+            sql = { 'snippets', 'dadbod', 'buffer' },
+        },
+        providers = {
+            dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+        },
     },
 
     fuzzy = { implementation = "prefer_rust_with_warning" },
