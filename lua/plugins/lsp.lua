@@ -1,4 +1,4 @@
-local servers = {
+local auto_install_servers = {
     gopls = {
         settings = {
             gopls = {
@@ -57,11 +57,22 @@ local servers = {
     graphql = {},
 }
 
-require('mason').setup()
+local manual_install_servers = {
+    gleam = {}
+}
 
-require('mason-lspconfig').setup({
-    ensure_installed = vim.tbl_keys(servers),
-})
+require('mason').setup()
+require('mason-lspconfig').setup({ ensure_installed = vim.tbl_keys(auto_install_servers) })
+
+local servers = vim.tbl_deep_extend('force', auto_install_servers, manual_install_servers)
+
+for server, config in pairs(servers) do
+    vim.lsp.config(server, config)
+end
+
+for server, _ in pairs(manual_install_servers) do
+    vim.lsp.enable(server)
+end
 
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('josepmdc-lsp-attach', { clear = true }),
