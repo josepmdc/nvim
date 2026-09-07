@@ -48,17 +48,40 @@ local auto_install_servers = {
     clangd = {},
     rust_analyzer = {},
     html = {},
-    ts_ls = {},
+    biome = {},
     tailwindcss = {},
     jsonls = {},
     jdtls = {},
     yamlls = {},
-    expert = {},
+    expert = {
+        cmd_env = {
+            -- override the deps path so it doesn't conflict with the one used by the docker container
+            MIX_DEPS_PATH = ".expert/deps",
+        },
+        on_attach = function(client)
+            -- disable all capabilities except for diagnostics
+            client.server_capabilities = {
+                textDocumentSync = client.server_capabilities.textDocumentSync,
+                diagnosticProvider = client.server_capabilities.diagnosticProvider,
+            }
+        end,
+    },
     graphql = {},
 }
 
 local manual_install_servers = {
-    gleam = {}
+    tsc = {},
+    gleam = {},
+    dexter = {
+        cmd = { 'dexter', 'lsp' },
+        root_markers = { '.dexter/dexter.db', '.dexter.db', '.git', 'mix.exs' },
+        filetypes = { 'elixir', 'eelixir', 'heex' },
+        init_options = {
+            followDelegates = true, -- jump through defdelegate to the target function
+            -- stdlibPath = "",      -- override Elixir stdlib path (auto-detected)
+            -- debug = false,        -- verbose logging to stderr (view with :LspLog)
+        },
+    }
 }
 
 require('mason').setup()

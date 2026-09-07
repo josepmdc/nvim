@@ -8,9 +8,9 @@ require('conform').setup({
     end,
     formatters_by_ft = {
         templ = { "templ" },
-        javascript = { "prettier" },
-        typescript = { "prettier" },
-        typescriptreact = { "prettier" },
-        javascriptreact = { "prettier" },
+        javascript = { "biome" },
+        typescript = { "biome" },
+        typescriptreact = { "biome" },
+        javascriptreact = { "biome" },
     },
 })

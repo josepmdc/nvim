@@ -12,9 +12,7 @@ require('telescope').setup {
                 preview_height = 0.70,
             },
         },
-        file_ignore_patterns = {
-            "mocks",
-        },
+        file_ignore_patterns = {},
     },
     pickers = {
         buffers = {
